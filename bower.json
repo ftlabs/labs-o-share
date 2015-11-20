@@ -7,7 +7,7 @@
     "o-buttons": "^3.0.3",
     "query-string": "sindresorhus/query-string#^v3.0.0",
     "strict-uri-encode": "kevva/strict-uri-encode#^1.0.2",
-    "lodash.memoize": "https://github.com/lodash/lodash/blob/3.0.4-npm-packages/lodash.memoize/index.js"
+    "lodash.memoize": "https://raw.githubusercontent.com/lodash/lodash/3.0.4-npm-packages/lodash.memoize/index.js"
   },
   "main": [
     "main.scss",
