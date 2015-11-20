@@ -1,15 +1,16 @@
 {
-    "name": "labs-o-share",
-    "dependencies": {
-        "ftdomdelegate": "^2.0.0",
-        "o-colors": ">=2.5.0 <4",
-        "o-forms": "^2.0.0",
-        "o-buttons": "^3.0.3",
-        "query-string": "sindresorhus/query-string#^v3.0.0",
-        "strict-uri-encode": "kevva/strict-uri-encode#^1.0.2"
-    },
-    "main": [
-        "main.scss",
-        "main.js"
-    ]
+  "name": "labs-o-share",
+  "dependencies": {
+    "ftdomdelegate": "^2.0.0",
+    "o-colors": ">=2.5.0 <4",
+    "o-forms": "^2.0.0",
+    "o-buttons": "^3.0.3",
+    "query-string": "sindresorhus/query-string#^v3.0.0",
+    "strict-uri-encode": "kevva/strict-uri-encode#^1.0.2",
+    "lodash.memoize": "https://github.com/lodash/lodash/blob/3.0.4-npm-packages/lodash.memoize/index.js"
+  },
+  "main": [
+    "main.scss",
+    "main.js"
+  ]
 }

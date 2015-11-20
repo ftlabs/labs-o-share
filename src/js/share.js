@@ -3,6 +3,7 @@
 	const DomDelegate = require('ftdomdelegate');
 	const qs = require('query-string');
 	const Tooltip = require('./Tooltip');
+	const memoize = require('lodash.memoize');
 
 	const socialUrls = {
 		twitter: 'https://twitter.com/intent/tweet?url={{url}}&amp;text={{title}}&amp;related={{relatedTwitterAccounts}}&amp;via=FT',
@@ -330,16 +331,12 @@
 	};
 
 
-	function getShareUrl(maxShares, context) {
+	const getShareUrl = memoize(function(maxShares, context) {
 
 		maxShares = maxShares || 1;
 		context = context || 0;
 
-		if (shareUrlPromises[maxShares]) {
-			return shareUrlPromises[maxShares];
-		}
-
-		shareUrlPromises[maxShares] = fetch(serviceURL + '/generate' +
+		return fetch(serviceURL + '/generate' +
 					'?target=' + encodeURIComponent(location.href.split('?')[0]) +
 					'&shareEventId=' + (Date.now() / 1000 | 0) +
 					'&maxShares=' + maxShares +
@@ -349,11 +346,8 @@
 				return response.text();
 			}).then(function(data){
 				return JSON.parse(data);
-			})
-		;
-
-		return shareUrlPromises[maxShares];
-	}
+			});
+	});
 
 	function getRemainingNumberOfTokensForUser(){
 
