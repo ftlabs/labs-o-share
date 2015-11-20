@@ -327,7 +327,7 @@
 	  * @param {(HTMLElement|string)} [el=document.body] - Element where to search for labs-o-share components. You can pass an HTMLElement or a selector string
 	  * @returns {Array} - An array of Share instances
 	  */
-	Share.init = function(el) {
+	Share.init = function(el, config) {
 		const shareInstances = [];
 
 		if (!el) {
@@ -340,7 +340,7 @@
 
 		for (let i = 0; i < shareElements.length; i++) {
 			if (!shareElements[i].hasAttribute('data-o-header--js')) {
-				shareInstances.push(new Share(shareElements[i]));
+				shareInstances.push(new Share(shareElements[i], config));
 			}
 		}
 
