@@ -16,7 +16,6 @@
 		email: 'mailto:?subject=See this article on FT.com&body={{title}}%0A{{url}}'
 	};
 
-	const shareUrlPromises = {};
 
 	let tokenTimeout = undefined;
 
