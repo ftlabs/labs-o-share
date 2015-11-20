@@ -25,9 +25,9 @@
 	  * @private
 	  */
 
-	function urlAlreadyHasShareCode(url){
+	function urlParametersAlreadyHaveShareCode(parameters){
 
-		return url.indexOf('share_code') > -1 ? true : false;
+		return parameters.indexOf('share_code') > -1 ? true : false;
 
 	}
 
@@ -35,9 +35,9 @@
 		return url.indexOf('#') > -1 ? true : false;
 	}
 
-	function removeExisingShareCodeFromURL(){
+	function removeExisingShareCodeFromURL(parameters){
 
-		const params = qs.parse(window.location.search);
+		const params = qs.parse(parameters);
 		delete params.share_code;
 
 		return qs.stringify(params);
@@ -379,15 +379,15 @@
 
 	Share.addShareCodeToUrl = function () {
 
-		if (urlAlreadyHasShareCode(window.location.href) || urlHasAHashSignInIt(window.location.href)) {
-			const otherParameters = removeExisingShareCodeFromURL();
+		if (urlParametersAlreadyHaveShareCode(window.location.search)) {
+			const otherParameters = removeExisingShareCodeFromURL(window.location.search);
 			let newURL = window.location.href.split('?')[0];
 
 			if (otherParameters !== ''){
 				newURL += '?' + otherParameters;
 			}
 
-			window.history.pushState({}, undefined, newURL);
+			window.history.pushState({}, undefined, newURL + window.location.hash);
 
 		}
 
@@ -397,9 +397,11 @@
 				.then(function (data) {
 					if (data.success) {
 						const code = data.data.shareCode;
-						const join = (window.location.href.indexOf("?") > -1) ? "&" : "?";
+						const params = qs.parse(window.location.search);
+						params.share_code = code;
+						const newQueryString = qs.stringify(params);
 
-						window.history.pushState({}, undefined, window.location.href.split('#')[0] + join + "share_code=" + code);
+						window.history.pushState({}, undefined, window.location.origin + window.location.pathname + '?' + newQueryString + window.location.hash);
 					}
 				});
 			}, 5000);
