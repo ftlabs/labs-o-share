@@ -1,5 +1,4 @@
 	/**global require, module, window, CustomEvent, document, HTMLElement, location */
-	const serviceURL = "https://sharecode.ft.com";
 	const DomDelegate = require('ftdomdelegate');
 	const qs = require('query-string');
 	const Tooltip = require('./Tooltip');
@@ -187,7 +186,7 @@
 				});
 			}
 
-			getRemainingNumberOfTokensForUser()
+			getRemainingNumberOfTokensForUser(config.serviceURL)
 				.then(amount => {
 					rootEl.querySelectorAll('[data-labs-o-share-credit-count]')[0].textContent = amount;
 				})
@@ -293,7 +292,8 @@
 				title: rootEl.getAttribute('data-labs-o-share-title') || '',
 				titleExtra: rootEl.getAttribute('data-labs-o-share-titleExtra') || '',
 				summary: rootEl.getAttribute('data-labs-o-share-summary') || '',
-				relatedTwitterAccounts: rootEl.getAttribute('data-labs-o-share-relatedTwitterAccounts') || ''
+				relatedTwitterAccounts: rootEl.getAttribute('data-labs-o-share-relatedTwitterAccounts') || '',
+				serviceURL: 'https://sharecode.ft.com'
 			}, config || {});
 
 			dispatchCustomEvent('ready', {
@@ -347,7 +347,7 @@
 		return shareInstances;
 	};
 
-	function getRemainingNumberOfTokensForUser(){
+	function getRemainingNumberOfTokensForUser(serviceURL){
 
 		return fetch(serviceURL + '/remainingamount',
 			{
