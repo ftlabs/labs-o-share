@@ -271,7 +271,7 @@
 		*/
 	Share.prototype.generateSocialUrl = function (socialNetwork) {
 		return getShareUrl(this.config.serviceURL)
-			.then(function(data) {
+			.then(data => {
 				if (data.success) {
 					const templateString = socialUrls[socialNetwork];
 					return templateString.replace('{{url}}', data.data.shortUrl)
