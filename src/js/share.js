@@ -25,10 +25,14 @@
 	  * @private
 	  */
 
-	function urlParametersAlreadyHaveShareCode(parameters){
+	function urlAlreadyHasShareCode(url){
 
-		return parameters.indexOf('share_code') > -1 ? true : false;
+		return url.indexOf('share_code') > -1 ? true : false;
 
+	}
+
+	function urlHasAHashSignInIt(url){
+		return url.indexOf('#') > -1 ? true : false;
 	}
 
 	function removeExisingShareCodeFromURL(){
@@ -374,7 +378,8 @@
 	}
 
 	Share.addShareCodeToUrl = function () {
-		if (urlParametersAlreadyHaveShareCode(window.location.search)) {
+
+		if (urlAlreadyHasShareCode(window.location.href) || urlHasAHashSignInIt(window.location.href)) {
 			const otherParameters = removeExisingShareCodeFromURL();
 			let newURL = window.location.href.split('?')[0];
 
@@ -392,10 +397,9 @@
 				.then(function (data) {
 					if (data.success) {
 						const code = data.data.shareCode;
-
 						const join = (window.location.href.indexOf("?") > -1) ? "&" : "?";
 
-						window.history.pushState({}, undefined, window.location.href + join + "share_code=" + code);
+						window.history.pushState({}, undefined, window.location.href.split('#')[0] + join + "share_code=" + code);
 					}
 				});
 			}, 5000);
