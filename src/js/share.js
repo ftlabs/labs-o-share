@@ -16,6 +16,24 @@
 		email: 'mailto:?subject=See this article on FT.com&body={{title}}%0A{{url}}'
 	};
 
+	const getShareUrl = memoize(function(maxShares, context) {
+
+		maxShares = maxShares || 1;
+		context = context || 0;
+
+		return fetch(serviceURL + '/generate' +
+					'?target=' + encodeURIComponent(location.href.split('?')[0]) +
+					'&shareEventId=' + (Date.now() / 1000 | 0) +
+					'&maxShares=' + maxShares +
+					'&context=' + context
+				,{credentials: 'include'})
+			.then(function(response) {
+				return response.text();
+			}).then(function(data){
+				return JSON.parse(data);
+			});
+	});
+
 
 	let tokenTimeout = undefined;
 
@@ -328,25 +346,6 @@
 
 		return shareInstances;
 	};
-
-
-	const getShareUrl = memoize(function(maxShares, context) {
-
-		maxShares = maxShares || 1;
-		context = context || 0;
-
-		return fetch(serviceURL + '/generate' +
-					'?target=' + encodeURIComponent(location.href.split('?')[0]) +
-					'&shareEventId=' + (Date.now() / 1000 | 0) +
-					'&maxShares=' + maxShares +
-					'&context=' + context
-				,{credentials: 'include'})
-			.then(function(response) {
-				return response.text();
-			}).then(function(data){
-				return JSON.parse(data);
-			});
-	});
 
 	function getRemainingNumberOfTokensForUser(){
 
