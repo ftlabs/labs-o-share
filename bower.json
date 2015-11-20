@@ -7,7 +7,12 @@
     "o-buttons": "^3.0.3",
     "query-string": "sindresorhus/query-string#^v3.0.0",
     "strict-uri-encode": "kevva/strict-uri-encode#^1.0.2",
-    "lodash.memoize": "https://raw.githubusercontent.com/lodash/lodash/3.0.4-npm-packages/lodash.memoize/index.js"
+    "lodash.memoize": "https://raw.githubusercontent.com/lodash/lodash/3.0.4-npm-packages/lodash.memoize/index.js",
+    "lodash.zip": "https://raw.githubusercontent.com/lodash/lodash/3.1.0-npm-packages/lodash.zip/index.js",
+    "lodash.restparam": "https://raw.githubusercontent.com/lodash/lodash/3.6.1-npm-packages/lodash.restparam/index.js",
+    "lodash.unzip": "https://raw.githubusercontent.com/lodash/lodash/3.2.1-npm-packages/lodash.unzip/index.js",
+    "lodash._arrayfilter": "https://raw.githubusercontent.com/lodash/lodash/3.0.0-npm-packages/lodash._arrayfilter/index.js",
+    "lodash._arraymap": "https://raw.githubusercontent.com/lodash/lodash/3.0.0-npm-packages/lodash._arraymap/index.js"
   },
   "main": [
     "main.scss",

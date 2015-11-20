@@ -3,6 +3,7 @@
 	const qs = require('query-string');
 	const Tooltip = require('./Tooltip');
 	const memoize = require('lodash.memoize');
+	const zip = require('lodash.zip');
 
 	const socialUrls = {
 		twitter: 'https://twitter.com/intent/tweet?url={{url}}&amp;text={{title}}&amp;related={{relatedTwitterAccounts}}&amp;via=FT',
@@ -89,7 +90,7 @@
 	function Share(rootEl, config) {
 		this.openWindows = {};
 		this.urlEl = rootEl.querySelector('.labs-o-share__urlbox');
-
+		this.rootEl = rootEl;
 		this.init(rootEl, config);
 	}
 
@@ -292,18 +293,21 @@
 		const giftoption = this.rootEl.querySelector('input.labs-o-share__giftoption:checked').value;
 		const descEl = this.rootEl.querySelector('.labs-o-share__giftdesc--'+giftoption);
 
-		Promise.all(Object.keys(socialUrls).map(function(network) {
-			const socialLinkEl = this.rootEl.querySelector('.labs-o-share__action--'+network);
-			if (socialLinkEl) {
-				return this.generateSocialUrl(network).then(function(destUrl) {
-					socialLinkEl.querySelector('a').href = destUrl;
+		const socialNetworks = Object.keys(socialUrls);
+		const socialLinkEls = socialNetworks.map(network => this.rootEl.querySelector(`.labs-o-share__action--${network} a`));
+		const socialNetworksWithEls = zip(socialNetworks, socialLinkEls);
+
+		socialNetworksWithEls.forEach(([network, element]) => {
+			if (element) {
+				return this.generateSocialUrl(network).then(destUrl => {
+					element.href = destUrl;
 				});
 			} else {
 				return Promise.resolve(1);
 			}
-		}));
+		});
 
-		this.generateSocialUrl('url').then(function(destUrl) {
+		this.generateSocialUrl('url').then(destUrl => {
 			this.rootEl.querySelector('.labs-o-share__urlbox').value = destUrl;
 		});
 
