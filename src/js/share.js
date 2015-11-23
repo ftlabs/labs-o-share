@@ -186,10 +186,10 @@ Share.prototype.handleCopied = function (ev) {
 	document.body.addEventListener('click', this.handleCloseToolip.bind(this));
 	document.body.addEventListener('keypress', this.handleCloseToolip.bind(this));
 
-	return dispatchCustomEvent('copy', {
+	return this.dispatchCustomEvent('copy', {
 		share: this,
 		action: 'url',
-		url: event.target.value
+		url: ev.target.value
 	});
 }
 
