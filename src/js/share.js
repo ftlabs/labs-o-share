@@ -221,6 +221,8 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 	const customAmountRadio = this.rootEl.querySelector('#labs-o-share-giftoption-cfg');
 
 	if (ev.target === customAmountRadio) {
+		ev.preventDefault();
+		
 		cfgEl.disabled = false;
 		cfgEl.focus();
 
