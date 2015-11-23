@@ -16,6 +16,8 @@
 		email: 'mailto:?subject=See this article on FT.com&body={{title}}%0A{{url}}'
 	};
 
+	const defaultServiceUrl = 'https://sharecode.ft.com';
+
 	const getShareUrl = memoize(function(serviceUrl, maxShares, context) {
 
 		maxShares = maxShares || 1;
@@ -126,7 +128,7 @@
 			titleExtra: rootEl.getAttribute('data-labs-o-share-titleExtra') || '',
 			summary: rootEl.getAttribute('data-labs-o-share-summary') || '',
 			relatedTwitterAccounts: rootEl.getAttribute('data-labs-o-share-relatedTwitterAccounts') || '',
-			serviceURL: 'https://sharecode.ft.com'
+			serviceURL: defaultServiceUrl
 		}, config || {});
 
 		this.dispatchCustomEvent('ready', {
