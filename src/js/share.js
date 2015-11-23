@@ -250,7 +250,9 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 		getShareUrl(this.config.serviceURL, cfgEl.value, 2)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
-			this.urlEl.value = '';
+			setTimeout(() => {
+				this.urlEl.value = '';
+			}, 0);
 			this.urlEl.value = shortUrl;
 		});
 	} else if (ev.target === cfgEl) {
@@ -261,7 +263,9 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 		getShareUrl(this.config.serviceURL, cfgEl.value, 2)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
-			this.urlEl.value = '';
+			setTimeout(() => {
+				this.urlEl.value = '';
+			}, 0);
 			this.urlEl.value = shortUrl;
 		});
 	} else if (ev.target.matches('.labs-o-share__giftoption') && ev.target.checked) {
@@ -269,7 +273,9 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 		getShareUrl(this.config.serviceURL, ev.target.value, 2)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
-			this.urlEl.value = '';
+			setTimeout(() => {
+				this.urlEl.value = '';
+			}, 0);
 			this.urlEl.value = shortUrl;
 		});
 	}
