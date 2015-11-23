@@ -35,6 +35,8 @@ const getShareUrl = memoize(function(serviceUrl, maxShares, context) {
 		}).then(function(data){
 			return JSON.parse(data);
 		});
+}, function resolver (a, b, c) {
+	return a + b + c;
 });
 
 
@@ -236,6 +238,8 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 	const customAmountRadio = this.rootEl.querySelector('#labs-o-share-giftoption-cfg');
 
 	if (ev.target === customAmountRadio) {
+		ev.preventDefault();
+
 		cfgEl.disabled = false;
 		cfgEl.focus();
 
