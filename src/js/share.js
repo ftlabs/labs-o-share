@@ -173,7 +173,7 @@ Share.prototype.handleReady = function () {
 
 Share.prototype.handleCloseToolip = function (ev) {
 	if (!this.rootEl.querySelector('.labs-o-share__link').contains(ev.target)) {
-		this.tip = this.tip.destroy();
+		this.tip = this.tip ? this.tip.destroy() : undefined;
 		document.body.removeEventListener('click', this.handleCloseToolip.bind(this));
 		document.body.removeEventListener('keypress', this.handleCloseToolip.bind(this));
 	}
@@ -349,7 +349,7 @@ Share.prototype.render = function () {
   */
 Share.prototype.destroy = function() {
 	this.rootDomDelegate.destroy();
-	this.tip = this.tip? this.tip.destroy() : undefined;
+	this.tip = this.tip ? this.tip.destroy() : undefined;
 	// Should destroy remove its children? Maybe setting .innerHTML to '' is faster
 	for (let i = 0; i < this.rootEl.children; i++) {
 		this.rootEl.removeChild(this.rootEl.children[i]);
