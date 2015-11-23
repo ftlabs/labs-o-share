@@ -74,6 +74,18 @@
 			oShare.tip.setText(text);
 		}
 
+		function handleReady() {
+			var shareAmount = parseInt(rootEl.querySelector(':checked').value, 10);
+			if (isNaN(shareAmount)) {
+				shareAmount = config.defaultShareAmount;
+			}
+			getShareUrl(shareAmount, 2)
+			.then(data => {
+				const shortUrl = data.data.shortUrl;
+				urlEl.value = shortUrl;
+			});
+		}
+
 		function handleCloseToolip(ev) {
 			if (!rootEl.querySelector('.labs-o-share__link').contains(ev.target)) {
 				oShare.tip = oShare.tip.destroy();
@@ -257,6 +269,7 @@
 			}
 
 			const rootDelegate = new DomDelegate(rootEl);
+			rootDelegate.on('ready', handleReady);
 			rootDelegate.on('copy', '.labs-o-share__urlbox', handleCopied);
 			rootDelegate.on('click', '.labs-o-share__btncopy', handleCopy);
 			rootDelegate.on('click', '.labs-o-share__action', handleSocial);
@@ -275,7 +288,8 @@
 				title: rootEl.getAttribute('data-labs-o-share-title') || '',
 				titleExtra: rootEl.getAttribute('data-labs-o-share-titleExtra') || '',
 				summary: rootEl.getAttribute('data-labs-o-share-summary') || '',
-				relatedTwitterAccounts: rootEl.getAttribute('data-labs-o-share-relatedTwitterAccounts') || ''
+				relatedTwitterAccounts: rootEl.getAttribute('data-labs-o-share-relatedTwitterAccounts') || '',
+				defaultShareAmount: 1
 			}, config || {});
 
 			dispatchCustomEvent('ready', {
