@@ -110,7 +110,7 @@ Share.prototype.init = function (rootEl, config) {
 	}
 
 	const rootDelegate = new DomDelegate(rootEl);
-	rootDelegate.on('ready', this.handleReady.bind(this));
+	rootDelegate.on('labsOShare.ready', this.handleReady.bind(this));
 	rootDelegate.on('copy', '.labs-o-share__urlbox', this.handleCopied.bind(this));
 	rootDelegate.on('click', '.labs-o-share__btncopy', this.handleCopy.bind(this));
 	rootDelegate.on('click', '.labs-o-share__action', this.handleSocial.bind(this));
