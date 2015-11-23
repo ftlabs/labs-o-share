@@ -367,7 +367,7 @@
 		return shareInstances;
 	};
 
-	Share.addShareCodeToUrl = function () {
+	Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl) {
 		if (urlParametersAlreadyHaveShareCode(window.location.search)) {
 			const otherParameters = removeExisingShareCodeFromURL();
 			let newURL = window.location.href.split('?')[0];
@@ -382,7 +382,7 @@
 
 		if (tokenTimeout === undefined) {
 			tokenTimeout = setTimeout(function () {
-				getShareUrl(this.config.serviceURL, 1, 1)
+				getShareUrl(serviceURL, 1, 1)
 				.then(function (data) {
 					if (data.success) {
 						const code = data.data.shareCode;
