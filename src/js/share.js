@@ -158,10 +158,10 @@ Share.prototype.tooltip = function (text) {
 }
 
 Share.prototype.handleReady = function () {
-	const shareAmountFromDom = parseInt(rootEl.querySelector(':checked').value, 10);
+	const shareAmountFromDom = parseInt(this.rootEl.querySelector(':checked').value, 10);
 	const shareAmount = isNaN(shareAmountFromDom) ? this.config.defaultShareAmount : shareAmountFromDom;
 
-	getShareUrl(shareAmount, 2)
+	getShareUrl(this.config.serviceURL, shareAmount, 2)
 	.then(data => {
 		const shortUrl = data.data.shortUrl;
 		this.urlEl.value = shortUrl;
@@ -287,7 +287,7 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 	* @param {string} socialNetwork - Name of the social network that we support (twitter, facebook, linkedin, googleplus, reddit, pinterest, url)
 	*/
 Share.prototype.generateSocialUrl = function (socialNetwork) {
-	return getShareUrl(this.config.serviceURL)
+	return getShareUrl(this.config.serviceURL, this.config.defaultShareAmount, 3)
 		.then(data => {
 			if (data.success) {
 				const templateString = socialUrls[socialNetwork];
