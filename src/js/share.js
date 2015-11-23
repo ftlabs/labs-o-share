@@ -17,6 +17,7 @@ const socialUrls = {
 };
 
 const defaultServiceUrl = 'https://sharecode.ft.com';
+const defaultShareAmount = 1;
 
 const getShareUrl = memoize(function(serviceUrl, maxShares, context) {
 
@@ -34,6 +35,8 @@ const getShareUrl = memoize(function(serviceUrl, maxShares, context) {
 		}).then(function(data){
 			return JSON.parse(data);
 		});
+}, function resolver (a, b, c) {
+	return a + b + c;
 });
 
 
@@ -109,6 +112,7 @@ Share.prototype.init = function (rootEl, config) {
 	}
 
 	const rootDelegate = new DomDelegate(rootEl);
+	rootDelegate.on('labsOShare.ready', this.handleReady.bind(this));
 	rootDelegate.on('copy', '.labs-o-share__urlbox', this.handleCopied.bind(this));
 	rootDelegate.on('click', '.labs-o-share__btncopy', this.handleCopy.bind(this));
 	rootDelegate.on('click', '.labs-o-share__action', this.handleSocial.bind(this));
@@ -128,7 +132,8 @@ Share.prototype.init = function (rootEl, config) {
 		titleExtra: rootEl.getAttribute('data-labs-o-share-titleExtra') || '',
 		summary: rootEl.getAttribute('data-labs-o-share-summary') || '',
 		relatedTwitterAccounts: rootEl.getAttribute('data-labs-o-share-relatedTwitterAccounts') || '',
-		serviceURL: defaultServiceUrl
+		serviceURL: defaultServiceUrl,
+		defaultShareAmount: defaultShareAmount
 	}, config || {});
 
 	this.dispatchCustomEvent('ready', {
@@ -154,9 +159,21 @@ Share.prototype.tooltip = function (text) {
 	this.tip.setText(text);
 }
 
+Share.prototype.handleReady = function () {
+	const shareAmountFromDom = parseInt(this.rootEl.querySelector(':checked').value, 10);
+	const shareAmount = isNaN(shareAmountFromDom) ? this.config.defaultShareAmount : shareAmountFromDom;
+
+	getShareUrl(this.config.serviceURL, shareAmount, 2)
+	.then(data => {
+		const shortUrl = data.data.shortUrl;
+		this.urlEl.value = shortUrl;
+	});
+}
+
+
 Share.prototype.handleCloseToolip = function (ev) {
 	if (!this.rootEl.querySelector('.labs-o-share__link').contains(ev.target)) {
-		this.tip = this.tip.destroy();
+		this.tip = this.tip ? this.tip.destroy() : undefined;
 		document.body.removeEventListener('click', this.handleCloseToolip.bind(this));
 		document.body.removeEventListener('keypress', this.handleCloseToolip.bind(this));
 	}
@@ -222,7 +239,7 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 
 	if (ev.target === customAmountRadio) {
 		ev.preventDefault();
-		
+
 		cfgEl.disabled = false;
 		cfgEl.focus();
 
@@ -233,7 +250,9 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 		getShareUrl(this.config.serviceURL, cfgEl.value, 2)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
-			this.urlEl.value = shortUrl;
+			setTimeout(() => {
+				this.urlEl.value = shortUrl;
+			}, 0);
 		});
 	} else if (ev.target === cfgEl) {
 		if (!cfgEl.value || isNaN(cfgEl.value)) {
@@ -243,15 +262,18 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 		getShareUrl(this.config.serviceURL, cfgEl.value, 2)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
-			this.urlEl.value = shortUrl;
-
+			setTimeout(() => {
+				this.urlEl.value = shortUrl;
+			}, 0);
 		});
 	} else if (ev.target.matches('.labs-o-share__giftoption') && ev.target.checked) {
 		cfgEl.disabled = true;
 		getShareUrl(this.config.serviceURL, ev.target.value, 2)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
-			this.urlEl.value = shortUrl;
+			setTimeout(() => {
+				this.urlEl.value = shortUrl;
+			}, 0);
 		});
 	}
 
@@ -274,7 +296,7 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 	* @param {string} socialNetwork - Name of the social network that we support (twitter, facebook, linkedin, googleplus, reddit, pinterest, url)
 	*/
 Share.prototype.generateSocialUrl = function (socialNetwork) {
-	return getShareUrl(this.config.serviceURL)
+	return getShareUrl(this.config.serviceURL, this.config.defaultShareAmount, 3)
 		.then(data => {
 			if (data.success) {
 				const templateString = socialUrls[socialNetwork];
@@ -332,7 +354,7 @@ Share.prototype.render = function () {
   */
 Share.prototype.destroy = function() {
 	this.rootDomDelegate.destroy();
-	this.tip = this.tip? this.tip.destroy() : undefined;
+	this.tip = this.tip ? this.tip.destroy() : undefined;
 	// Should destroy remove its children? Maybe setting .innerHTML to '' is faster
 	for (let i = 0; i < this.rootEl.children; i++) {
 		this.rootEl.removeChild(this.rootEl.children[i]);
@@ -369,7 +391,7 @@ Share.init = function(el, config) {
 	return shareInstances;
 };
 
-Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl) {
+Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount = defaultShareAmount) {
 	if (urlParametersAlreadyHaveShareCode(window.location.search)) {
 		const otherParameters = removeExisingShareCodeFromURL();
 		let newURL = window.location.href.split('?')[0];
@@ -384,7 +406,7 @@ Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl) {
 
 	if (tokenTimeout === undefined) {
 		tokenTimeout = setTimeout(function () {
-			getShareUrl(serviceURL, 1, 1)
+			getShareUrl(serviceURL, shareAmount, 1)
 			.then(function (data) {
 				if (data.success) {
 					const code = data.data.shareCode;
