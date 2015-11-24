@@ -394,18 +394,6 @@ Share.init = function(el, config) {
 	return shareInstances;
 };
 
-Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount = defaultShareAmount) {
-	if (urlParametersAlreadyHaveShareCode(window.location.search)) {
-		const otherParameters = removeExisingShareCodeFromURL();
-		let newURL = window.location.href.split('?')[0];
-
-		if (otherParameters !== ''){
-			newURL += '?' + otherParameters;
-		}
-
-		window.history.pushState({}, undefined, newURL);
-
-	}
 
 	Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount = defaultShareAmount) {
 
@@ -438,7 +426,6 @@ Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount 
 
 		}
 
-	}
 
 }
 
