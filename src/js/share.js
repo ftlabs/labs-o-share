@@ -54,13 +54,16 @@ function urlParametersAlreadyHaveShareCode(parameters){
 
 }
 
-function removeExisingShareCodeFromURL(){
+function urlHasAHashSignInIt(url){
+	return url.indexOf('#') > -1 ? true : false;
+}
 
-	const params = qs.parse(window.location.search);
+function removeExisingShareCodeFromURL(parameters){
+
+	const params = qs.parse(parameters);
 	delete params.share_code;
 
 	return qs.stringify(params);
-
 }
 
 function getRemainingNumberOfTokensForUser(serviceURL){
@@ -391,34 +394,38 @@ Share.init = function(el, config) {
 	return shareInstances;
 };
 
-Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount = defaultShareAmount) {
-	if (urlParametersAlreadyHaveShareCode(window.location.search)) {
-		const otherParameters = removeExisingShareCodeFromURL();
-		let newURL = window.location.href.split('?')[0];
 
-		if (otherParameters !== ''){
-			newURL += '?' + otherParameters;
+	Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount = defaultShareAmount) {
+
+		if (urlParametersAlreadyHaveShareCode(window.location.search)) {
+			const otherParameters = removeExisingShareCodeFromURL(window.location.search);
+			let newURL = window.location.href.split('?')[0];
+
+			if (otherParameters !== ''){
+				newURL += '?' + otherParameters;
+			}
+
+			window.history.pushState({}, undefined, newURL + window.location.hash);
+
 		}
 
-		window.history.pushState({}, undefined, newURL);
+		if (tokenTimeout === undefined) {
+			tokenTimeout = setTimeout(function () {
+				getShareUrl(serviceURL, shareAmount, 1)
+				.then(function (data) {
+					if (data.success) {
+						const code = data.data.shareCode;
+						const params = qs.parse(window.location.search);
+						params.share_code = code;
+						const newQueryString = qs.stringify(params);
 
-	}
+						window.history.pushState({}, undefined, window.location.origin + window.location.pathname + '?' + newQueryString + window.location.hash);
+					}
+				});
+			}, 5000);
 
-	if (tokenTimeout === undefined) {
-		tokenTimeout = setTimeout(function () {
-			getShareUrl(serviceURL, shareAmount, 1)
-			.then(function (data) {
-				if (data.success) {
-					const code = data.data.shareCode;
+		}
 
-					const join = (window.location.href.indexOf("?") > -1) ? "&" : "?";
-
-					window.history.pushState({}, undefined, window.location.href + join + "share_code=" + code);
-				}
-			});
-		}, 5000);
-
-	}
 
 }
 
