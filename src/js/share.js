@@ -55,13 +55,16 @@ function urlParametersAlreadyHaveShareCode(parameters){
 
 }
 
-function removeExisingShareCodeFromURL(){
+function urlHasAHashSignInIt(url){
+	return url.indexOf('#') > -1 ? true : false;
+}
 
-	const params = qs.parse(window.location.search);
+function removeExisingShareCodeFromURL(parameters){
+
+	const params = qs.parse(parameters);
 	delete params.share_code;
 
 	return qs.stringify(params);
-
 }
 
 function getRemainingNumberOfTokensForUser(serviceURL){
@@ -392,17 +395,18 @@ Share.init = function(el, config) {
 	return shareInstances;
 };
 
+
 Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount = defaultShareAmount) {
+
 	if (urlParametersAlreadyHaveShareCode(window.location.search)) {
-		const otherParameters = removeExisingShareCodeFromURL();
+		const otherParameters = removeExisingShareCodeFromURL(window.location.search);
 		let newURL = window.location.href.split('?')[0];
 
 		if (otherParameters !== ''){
 			newURL += '?' + otherParameters;
 		}
 
-		window.history.pushState({}, undefined, newURL);
-
+		window.history.pushState({}, undefined, newURL + window.location.hash);
 	}
 
 	if (tokenTimeout === undefined) {
@@ -411,16 +415,15 @@ Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount 
 			.then(function (data) {
 				if (data.success) {
 					const code = data.data.shareCode;
+					const params = qs.parse(window.location.search);
+					params.share_code = code;
+					const newQueryString = qs.stringify(params);
 
-					const join = (window.location.href.indexOf('?') > -1) ? '&' : '?';
-
-					window.history.pushState({}, undefined, window.location.href + join + 'share_code=' + code);
+					window.history.pushState({}, undefined, window.location.origin + window.location.pathname + '?' + newQueryString + window.location.hash);
 				}
 			});
 		}, 5000);
-
 	}
-
 }
 
 module.exports = Share;
