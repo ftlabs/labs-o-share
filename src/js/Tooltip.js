@@ -1,5 +1,5 @@
 /*global module*/
-
+/* eslint-env browser */
 /**
  * @class Tooltip
  *
@@ -29,17 +29,18 @@ function Tooltip(text, refEl) {
 	 * @param {HTMLElement} tipEl - a tooltip element returned by {@link createTooltip}
 	 */
 	function renderTooltip(tipEl) {
-		var os = offset(refEl);
+		const os = offset(refEl);
 		document.body.appendChild(tipEl);
-		tipEl.style.width = tipEl.clientWidth + "px"; // Set width based on initial text
+		tipEl.style.width = tipEl.clientWidth + 'px'; // Set width based on initial text
 		tipEl.style.top = (os.y + refEl.offsetHeight) + 'px';
-		tipEl.style.left = (os.x - (tipEl.offsetWidth / 2) + (refEl.offsetWidth / 2)) + "px";
+		tipEl.style.left = (os.x - (tipEl.offsetWidth / 2) + (refEl.offsetWidth / 2)) + 'px';
 		tipEl.style.opacity = 1;
 	}
 
 	// Return the offset of the element from the top left of the document
 	function offset(el) {
-		var os = {x:0, y:0}, treeEl = el;
+		const os = {x:0, y:0};
+		let treeEl = el;
 		while (treeEl) {
 			os.y += treeEl.offsetTop;
 			os.x += treeEl.offsetLeft;

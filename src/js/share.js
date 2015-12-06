@@ -1,5 +1,7 @@
-/* global require, module, window, CustomEvent, document, HTMLElement, location */
+/**global require, module */
+/* eslint-env browser */
 /* eslint strict:0 */
+
 const DomDelegate = require('ftdomdelegate');
 const qs = require('query-string');
 const Tooltip = require('./Tooltip');
@@ -19,14 +21,15 @@ const socialUrls = {
 
 const defaultServiceUrl = 'https://sharecode.ft.com';
 const defaultShareAmount = 1;
+const defaultTarget = location.href.split('?')[0];
 
-const getShareUrl = memoize(function(serviceUrl, maxShares, context) {
+const getShareUrl = memoize(function(serviceUrl, maxShares, context, target = defaultTarget) {
 
 	maxShares = maxShares || 1;
 	context = context || 0;
 
 	return fetch(serviceUrl + '/generate' +
-				'?target=' + encodeURIComponent(location.href.split('?')[0]) +
+				'?target=' + encodeURIComponent(target) +
 				'&shareEventId=' + (Date.now() / 1000 | 0) +
 				'&maxShares=' + maxShares +
 				'&context=' + context
@@ -53,10 +56,6 @@ function urlParametersAlreadyHaveShareCode(parameters){
 
 	return parameters.indexOf('share_code') > -1 ? true : false;
 
-}
-
-function urlHasAHashSignInIt(url){
-	return url.indexOf('#') > -1 ? true : false;
 }
 
 function removeExisingShareCodeFromURL(parameters){
@@ -137,7 +136,8 @@ Share.prototype.init = function (rootEl, config) {
 		summary: rootEl.getAttribute('data-labs-o-share-summary') || '',
 		relatedTwitterAccounts: rootEl.getAttribute('data-labs-o-share-relatedTwitterAccounts') || '',
 		serviceURL: defaultServiceUrl,
-		defaultShareAmount: defaultShareAmount
+		defaultShareAmount: defaultShareAmount,
+		target: defaultTarget
 	}, config || {});
 
 	this.dispatchCustomEvent('ready', {
@@ -167,7 +167,7 @@ Share.prototype.handleReady = function () {
 	const shareAmountFromDom = parseInt(this.rootEl.querySelector(':checked').value, 10);
 	const shareAmount = isNaN(shareAmountFromDom) ? this.config.defaultShareAmount : shareAmountFromDom;
 
-	getShareUrl(this.config.serviceURL, shareAmount, 2)
+	getShareUrl(this.config.serviceURL, shareAmount, 2, this.config.target)
 	.then(data => {
 		const shortUrl = data.data.shortUrl;
 		this.urlEl.value = shortUrl;
@@ -251,7 +251,7 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 			cfgEl.value = 5;
 		}
 
-		getShareUrl(this.config.serviceURL, cfgEl.value, 2)
+		getShareUrl(this.config.serviceURL, cfgEl.value, 2, this.config.target)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
 			setTimeout(() => {
@@ -263,7 +263,7 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 			cfgEl.value = 5;
 		}
 
-		getShareUrl(this.config.serviceURL, cfgEl.value, 2)
+		getShareUrl(this.config.serviceURL, cfgEl.value, 2, this.config.target)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
 			setTimeout(() => {
@@ -272,7 +272,7 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 		});
 	} else if (ev.target.matches('.labs-o-share__giftoption') && ev.target.checked) {
 		cfgEl.disabled = true;
-		getShareUrl(this.config.serviceURL, ev.target.value, 2)
+		getShareUrl(this.config.serviceURL, ev.target.value, 2, this.config.target)
 		.then(data => {
 			const shortUrl = data.data.shortUrl;
 			setTimeout(() => {
@@ -300,7 +300,7 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 	* @param {string} socialNetwork - Name of the social network that we support (twitter, facebook, linkedin, googleplus, reddit, pinterest, url)
 	*/
 Share.prototype.generateSocialUrl = function (socialNetwork) {
-	return getShareUrl(this.config.serviceURL, this.config.defaultShareAmount, 3)
+	return getShareUrl(this.config.serviceURL, this.config.defaultShareAmount, 3, this.config.target)
 		.then(data => {
 			if (data.success) {
 				const templateString = socialUrls[socialNetwork];
@@ -411,7 +411,7 @@ Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount 
 
 	if (tokenTimeout === undefined) {
 		tokenTimeout = setTimeout(function () {
-			getShareUrl(serviceURL, shareAmount, 1)
+			getShareUrl(serviceURL, shareAmount, 1, this.config.target)
 			.then(function (data) {
 				if (data.success) {
 					const code = data.data.shareCode;
