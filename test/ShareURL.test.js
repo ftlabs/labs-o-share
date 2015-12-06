@@ -21,7 +21,7 @@ describe('share url behaviour', function() {
 	});
 
 	it('share URL tool - copies to clipboard', function() {
-		var spy = createSpy();
+		const spy = createSpy();
 		document.execCommand = spy;
 
 		const ev = document.createEvent('Event');
