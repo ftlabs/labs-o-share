@@ -1,4 +1,5 @@
-/**global require, module, window, CustomEvent, document, HTMLElement, location */
+/**global require, module */
+/* eslint-env browser */
 const DomDelegate = require('ftdomdelegate');
 const qs = require('query-string');
 const Tooltip = require('./Tooltip');
@@ -56,7 +57,6 @@ function urlParametersAlreadyHaveShareCode(parameters){
 }
 
 function removeExisingShareCodeFromURL(){
-
 	const params = qs.parse(window.location.search);
 	delete params.share_code;
 
@@ -413,9 +413,9 @@ Share.addShareCodeToUrl = function (serviceURL = defaultServiceUrl, shareAmount 
 				if (data.success) {
 					const code = data.data.shareCode;
 
-					const join = (window.location.href.indexOf("?") > -1) ? "&" : "?";
+					const join = (window.location.href.indexOf('?') > -1) ? '&' : '?';
 
-					window.history.pushState({}, undefined, window.location.href + join + "share_code=" + code);
+					window.history.pushState({}, undefined, window.location.href + join + 'share_code=' + code);
 				}
 			});
 		}, 5000);
