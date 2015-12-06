@@ -20,7 +20,7 @@
 		}
 
 		h3 {
-			margin: 0 0 4px 0;
+			margin: 0 0 4px;
     		font-size: 13px;
 		}
 	}
@@ -86,11 +86,11 @@
 		margin-top: 5px;
 		box-sizing: border-box;
 		> form {
-			margin-top: 5px;
 			@include oFormsRadioCheckbox((radio:".labs-o-share__giftoption", checkbox:".labs-o-share__chkbox", label: ".labs-o-share__giftlabel"));
+			margin-top: 5px;
 		}
 		p {
-			margin: 5px 0 0 0;
+			margin: 5px 0 0;
 		}
 		> *:first-child {
 			margin-top: 0;

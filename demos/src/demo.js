@@ -1,7 +1,7 @@
 /*global require*/
-var labsOShare = require('../../main.js');
+const labsOShare = require('../../main.js');
 
-var shares;
+let shares;
 
 document.body.addEventListener("oOverlay.destroy", function() {
 	shares.forEach(function(share) {
@@ -10,5 +10,7 @@ document.body.addEventListener("oOverlay.destroy", function() {
 });
 
 document.body.addEventListener("oOverlay.ready", function() {
-	shares = labsOShare.init();
+	shares = labsOShare.init(document.body, {
+		target: 'https://next.ft.com/content/d2b1abb0-9287-11e5-94e6-c5413829caa5'
+	});
 });
