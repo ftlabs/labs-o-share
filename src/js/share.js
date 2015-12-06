@@ -58,10 +58,6 @@ function urlParametersAlreadyHaveShareCode(parameters){
 
 }
 
-function urlHasAHashSignInIt(url){
-	return url.indexOf('#') > -1 ? true : false;
-}
-
 function removeExisingShareCodeFromURL(parameters){
 
 	const params = qs.parse(parameters);
