@@ -300,7 +300,15 @@ Share.prototype.handleGiftOptionChange = function (ev) {
 	* @param {string} socialNetwork - Name of the social network that we support (twitter, facebook, linkedin, googleplus, reddit, pinterest, url)
 	*/
 Share.prototype.generateSocialUrl = function (socialNetwork) {
-	return getShareUrl(this.config.serviceURL, this.config.defaultShareAmount, 3, this.config.target)
+	var amountToShare = this.rootEl.querySelector('input.labs-o-share__giftoption:checked').value;
+
+	if (amountToShare === "cfg"){
+
+		amountToShare = this.rootEl.querySelector('.labs-o-share__customgift').value;
+
+	}
+
+	return getShareUrl(this.config.serviceURL, amountToShare, 3, this.config.target)
 		.then(data => {
 			if (data.success) {
 				const templateString = socialUrls[socialNetwork];
