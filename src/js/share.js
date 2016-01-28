@@ -303,8 +303,6 @@ Share.prototype.generateSocialUrl = function (socialNetwork) {
 
 	var amountToShare = this.rootEl.querySelector('input.labs-o-share__giftoption:checked').value;
 
-	debugger;
-
 	if (amountToShare === "cfg"){
 
 		amountToShare = this.rootEl.querySelector('.labs-o-share__customgift').value;
